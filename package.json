@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Algorithm-Visualizer-Hub/data-server/issues"
   },
-  "homepage": "https://github.com/Algorithm-Visualizer-Hub/data-server#readme"
+  "homepage": "https://github.com/Algorithm-Visualizer-Hub/data-server#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
 }

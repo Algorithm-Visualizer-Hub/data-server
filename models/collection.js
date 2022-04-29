@@ -1,30 +1,21 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
+
 
 const collectionSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
+  name: String,
   creatorId: {
     type: mongoose.ObjectId,
-    required: true
+    ref: 'User'
   },
-  description: {
-    type: String
-  },
-  numVis: {
-    type: Number,
-    default: 0
-  },
-  numSaved: {
-    type: Number,
-    default: 0
-  },
+  description: String,
+  numVis: Number,
+  numSaved: Number,
   visIds: {
-    type: [mongoose.ObjectId]
+    type: [mongoose.ObjectId],
+    ref: 'Visualization'
   }
-});
+})
 
-const Collection = mongoose.model('Collection', collectionSchema);
+const Collection = mongoose.model('Collection', collectionSchema)
 
-export default Collection;
+export default Collection

@@ -1,22 +1,16 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
+
 
 const visualizationSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
+  name: String,
   authorId: {
     type: mongoose.ObjectId,
-    required: true
+    ref: 'User'
   },
-  star: {
-    type: Number
-  },
-  files: {
-    type: [String]
-  }
-});
+  star: Number,
+  files: [{filename: String, content: String}]
+})
 
-const Visualization = mongoose.model('Visualization', visualizationSchema);
+const Visualization = mongoose.model('Visualization', visualizationSchema)
 
-export default Visualization;
+export default Visualization

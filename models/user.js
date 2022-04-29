@@ -1,26 +1,24 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
+import jwt from "jsonwebtoken"
+
 
 const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true
-  },
-  pwHash: {
-    type: String,
-    required: true
-  },
-  starEarned: {
-    type: Number
-  },
+  username: String,
+  email: String,
+  pwHash: String,
+  starEarned: Number,
   collectionIds: {
-    type: [mongoose.ObjectId]
+    type: [mongoose.ObjectId],
+    ref: 'Collection'
   }
-});
+})
 
-const User = mongoose.model('User', userSchema);
+userSchema.methods.generateAuthToken = function() {
+  const token = jwt.sign({_id: this._id}, process.env.jwtPrivateKey)
+  return token
+}
 
-export default User;
+const User = mongoose.model('User', userSchema)
+
+
+export default User

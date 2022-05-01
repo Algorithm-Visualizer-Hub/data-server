@@ -67,7 +67,7 @@ router.get('/:id', async (req, res) => {
     .select('-pwHash -_id')
     .populate('collectionIds')
   if (!user) {
-    res.status(404).send('User not found!')
+    return res.status(404).send('User not found!')
   }
   user = user.toObject()
   user.id = req.params.id

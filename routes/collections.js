@@ -49,7 +49,10 @@ router.post('/', auth, async (req, res) => {
 
 // Get information of the collection with given id
 router.get('/:id', async (req, res) => {
-  let collection = await Collection.findById(req.params.id).select('-_id')
+  let collection = await Collection
+    .findById(req.params.id)
+    .select('-_id')
+    .populate('visIds')
   if (!collection) {
     return res.status(404).send('Collection not found!')
   }
@@ -57,6 +60,39 @@ router.get('/:id', async (req, res) => {
   collection.id = req.params.id
 
   res.send(collection)
+})
+
+// Update a collection's name or description
+router.put('/:id', auth, async (req, res) => {
+  // Validate the collection id
+  const collection = await Collection.findById(req.params.id)
+  if (!collection) {
+    return res.status(404).send('Collection not found!')
+  }
+  // Validate that user is the creator of this collection
+  if (req.user._id.toString() !== collection.creatorId.toString()) {
+    return res.status(403).send('Permission denied!')
+  }
+
+  // Validate and update name and description when included.
+  if (req.body.name) {
+    let {error, value} = collectionNameSchema.validate(req.body.name)
+    if (error) {
+      return res.status(400).send('Collection name: ' + error.details[0].message)
+    }
+    collection.name = req.body.name
+  }
+
+  if (req.body.description) {
+    let {error, value} = descriptionSchema.validate(req.body.description)
+    if (error) {
+      return res.status(400).send('Collection description: ' + error.details[0].message)
+    }
+    collection.description = req.body.description
+  }
+
+  await collection.save()
+  res.send(collection)  
 })
 
 export default router

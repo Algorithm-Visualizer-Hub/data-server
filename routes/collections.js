@@ -5,6 +5,7 @@ import mongoose from "mongoose"
 import auth from "../middleware/auth.js"
 import Collection from "../models/collection.js"
 import User from "../models/user.js"
+import Visualization from "../models/visualization.js"
 
 const router = express.Router()
 
@@ -93,6 +94,31 @@ router.put('/:id', auth, async (req, res) => {
 
   await collection.save()
   res.send(collection)  
+})
+
+// Add a visualization to a collection's visIds array.
+router.post('/:id/visIds', auth, async (req, res) => {
+  // Validate the collection id
+  const collection = await Collection.findById(req.params.id)
+  if (!collection) {
+    return res.status(404).send('Collection not found!')
+  }
+  // Validate that user is the creator of this collection
+  if (req.user._id.toString() !== collection.creatorId.toString()) {
+    return res.status(403).send('Permission denied!')
+  }
+
+  // Validate and add visId
+  const visualization = await Visualization.findById(req.body.visId)
+  if (!visualization) {
+    return res.status(404).send('Visualization not found!')
+  }
+  if (collection.visIds.map(visId => visId.toString()).includes(visualization._id.toString())) {
+    return res.status(400).send('visId already in the visIds array of this collection')
+  }
+  collection.visIds.push(req.body.visId)
+  await collection.save()
+  res.send(collection)
 })
 
 export default router

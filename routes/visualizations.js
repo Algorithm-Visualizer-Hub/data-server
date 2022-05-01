@@ -60,4 +60,10 @@ router.get('/:id', async (req, res) => {
   })
 })
 
+// Get visualizations matching some query params.
+router.get('/', async (req, res) => {
+  const visualizations = await Visualization.find(req.query)
+  res.send(visualizations)
+})
+
 export default router

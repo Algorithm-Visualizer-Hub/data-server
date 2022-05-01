@@ -62,7 +62,10 @@ router.post('/', async (req, res) => {
 // Get information of the user with given id
 router.get('/:id', async (req, res) => {
   
-  let user = await User.findById(req.params.id).select('-pwHash -_id')
+  let user = await User
+    .findById(req.params.id)
+    .select('-pwHash -_id')
+    .populate('collectionIds')
   if (!user) {
     res.status(404).send('User not found!')
   }

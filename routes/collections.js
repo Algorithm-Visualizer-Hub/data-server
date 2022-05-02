@@ -117,7 +117,16 @@ router.post('/:id/visIds', auth, async (req, res) => {
     return res.status(400).send('visId already in the visIds array of this collection')
   }
   collection.visIds.push(req.body.visId)
-  await collection.save()
+  visualization.star += 1
+
+  // Transaction for saving both collection and visualization or neither (all or nothing)
+  const session = await mongoose.startSession()
+  await session.withTransaction(async () => {
+    await collection.save({session: session})
+    await visualization.save({session: session})
+  })
+  session.endSession()
+
   res.send(collection)
 })
 

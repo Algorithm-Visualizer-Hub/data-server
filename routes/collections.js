@@ -96,6 +96,7 @@ router.put('/:id', auth, async (req, res) => {
 })
 
 // Add a visualization to a collection's visIds array.
+// TODO: Group read and write into a transaction.
 router.post('/:id/visIds', auth, async (req, res) => {
   // Validate the collection id
   const collection = await Collection.findById(req.params.id)

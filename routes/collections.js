@@ -118,12 +118,15 @@ router.post('/:id/visIds', auth, async (req, res) => {
   }
   collection.visIds.push(req.body.visId)
   visualization.star += 1
+  const author = await User.findById(visualization.authorId)
+  author.starEarned += 1
 
   // Transaction for saving both collection and visualization or neither (all or nothing)
   const session = await mongoose.startSession()
   await session.withTransaction(async () => {
     await collection.save({session: session})
     await visualization.save({session: session})
+    await author.save({session: session})
   })
   session.endSession()
 

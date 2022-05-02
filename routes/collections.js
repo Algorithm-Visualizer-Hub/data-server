@@ -29,7 +29,6 @@ router.post('/', auth, async (req, res) => {
     name: req.body.name,
     creatorId: req.user._id,
     description: req.body.description,
-    numVis: 0,
     numSaved: 1,
     visIds: []
   })

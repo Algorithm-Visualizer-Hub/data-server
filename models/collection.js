@@ -8,7 +8,6 @@ const collectionSchema = new mongoose.Schema({
     ref: 'User'
   },
   description: String,
-  numVis: Number,
   numSaved: Number,
   visIds: {
     type: [mongoose.ObjectId],
